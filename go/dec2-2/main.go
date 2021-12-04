@@ -59,15 +59,21 @@ func main() {
 
 	horizontal := 0
 	depth := 0
+	aim := 0
 
 	for _, cmd := range input {
 		switch {
 		case cmd.IsForward():
-			horizontal += cmd.Forward()
+			fwd := cmd.Forward()
+			horizontal += fwd
+			deltaDepth := aim * fwd
+			depth += deltaDepth
+
 		case cmd.IsUp():
-			depth -= cmd.Up()
+			aim -= cmd.Up()
+
 		case cmd.IsDown():
-			depth += cmd.Down()
+			aim += cmd.Down()
 		}
 	}
 
