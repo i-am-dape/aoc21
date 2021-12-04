@@ -1,4 +1,4 @@
-package input
+package test
 
 import (
 	"flag"
@@ -9,13 +9,18 @@ import (
 )
 
 var (
-	inputFile = flag.String("input", "", "The input file to use")
+	useInput = flag.Bool("use_input", false, "Indicate that the example should be loaded")
 )
-
+ 
 func Read[T any](toT func(string) (T, error)) ([]T, error) {
-	content, err := os.ReadFile(*inputFile)
+	filename := "example.txt"
+	if *useInput {
+		filename = "input.txt"
+	}
+
+	content, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, fmt.Errorf("os.Readfile:%v; %w", *inputFile, err)
+		return nil, fmt.Errorf("os.Readfile:%v; %w", filename, err)
 	}
 
 	parts := strings.Split(string(content), "\n")
