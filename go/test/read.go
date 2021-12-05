@@ -1,26 +1,22 @@
 package test
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 )
 
-var (
-	useInput = flag.Bool("use_input", false, "Indicate that the example should be loaded")
-)
- 
-func Read[T any](toT func(string) (T, error)) ([]T, error) {
-	filename := "example.txt"
-	if *useInput {
-		filename = "input.txt"
-	}
+var filename = "example.txt"
 
+func Read[T any](toT func(string) (T, error)) ([]T, error) {
 	content, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, fmt.Errorf("os.Readfile:%v; %w", filename, err)
+	}
+
+	if len(content) == 0 {
+		return nil, fmt.Errorf("no data")
 	}
 
 	parts := strings.Split(string(content), "\n")
@@ -42,4 +38,8 @@ func Dec2Int(txt string) (int, error) {
 		return -1, err
 	}
 	return int(tmp), nil
+}
+
+func String(txt string) (string, error) {
+	return txt, nil
 }

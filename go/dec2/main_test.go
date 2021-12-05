@@ -49,60 +49,64 @@ func (c cmd) Down() int {
 	return c.parseIntAt(5)
 }
 
-func Test1(t *testing.T) {
-	input, err := test.Read(func(txt string) (cmd, error) {
-		return cmd(txt), nil
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	horizontal := 0
-	depth := 0
-
-	for _, cmd := range input {
-		switch {
-		case cmd.IsForward():
-			horizontal += cmd.Forward()
-		case cmd.IsUp():
-			depth -= cmd.Up()
-		case cmd.IsDown():
-			depth += cmd.Down()
+func TestDec2(t *testing.T) {
+	test.Run(func() {
+		input, err := test.Read(func(txt string) (cmd, error) {
+			return cmd(txt), nil
+		})
+		if err != nil {
+			panic(err)
 		}
-	}
 
-	test.Check(t, horizontal*depth, 150, 2039256)
+		horizontal := 0
+		depth := 0
+
+		for _, cmd := range input {
+			switch {
+			case cmd.IsForward():
+				horizontal += cmd.Forward()
+			case cmd.IsUp():
+				depth -= cmd.Up()
+			case cmd.IsDown():
+				depth += cmd.Down()
+			}
+		}
+
+		test.Check(t, horizontal*depth, 150, 2039256)
+	})
 }
 
-func Test2(t *testing.T) {
-	input, err := test.Read(func(txt string) (cmd, error) {
-		return cmd(txt), nil
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	horizontal := 0
-	depth := 0
-	aim := 0
-
-	for _, cmd := range input {
-		switch {
-		case cmd.IsForward():
-			fwd := cmd.Forward()
-			horizontal += fwd
-			deltaDepth := aim * fwd
-			depth += deltaDepth
-
-		case cmd.IsUp():
-			aim -= cmd.Up()
-
-		case cmd.IsDown():
-			aim += cmd.Down()
+func TestDec2_2(t *testing.T) {
+	test.Run(func() {
+		input, err := test.Read(func(txt string) (cmd, error) {
+			return cmd(txt), nil
+		})
+		if err != nil {
+			panic(err)
 		}
-	}
 
-	test.Check(t, horizontal*depth, 900, 1856459736)
+		horizontal := 0
+		depth := 0
+		aim := 0
+
+		for _, cmd := range input {
+			switch {
+			case cmd.IsForward():
+				fwd := cmd.Forward()
+				horizontal += fwd
+				deltaDepth := aim * fwd
+				depth += deltaDepth
+
+			case cmd.IsUp():
+				aim -= cmd.Up()
+
+			case cmd.IsDown():
+				aim += cmd.Down()
+			}
+		}
+
+		test.Check(t, horizontal*depth, 900, 1856459736)
+	})
 }
 
 func TestMain(m *testing.M) {

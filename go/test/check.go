@@ -7,11 +7,11 @@ type T interface {
 
 func Check(t T, got, example, input int) {
 	want := example
-	if *useInput {
+	if filename == "input.txt" {
 		want = input
 	}
 
-	t.Log("got: ", got, " want: ", want, " use_input: ", *useInput)
+	t.Log("[", filename, "]", "got: ", got, " want: ", want, " ok: ", got == want)
 
 	if got != want {
 		t.Fatal(got, want)
