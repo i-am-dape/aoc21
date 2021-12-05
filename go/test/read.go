@@ -16,7 +16,7 @@ func Read[T any](toT func(string) (T, error)) ([]T, error) {
 	}
 
 	if len(content) == 0 {
-		return nil, fmt.Errorf("no data")
+		return nil, fmt.Errorf("%s: no data", filename)
 	}
 
 	parts := strings.Split(string(content), "\n")
