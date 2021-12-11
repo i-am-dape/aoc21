@@ -17,3 +17,16 @@ func Check(t T, got, example, input int) {
 		t.Fatal(got, want)
 	}
 }
+
+func Check64(t T, got, example, input int64) {
+	want := example
+	if filename == "input.txt" {
+		want = input
+	}
+
+	t.Log("[", filename, "]", "got: ", got, " want: ", want, " ok: ", got == want)
+
+	if got != want {
+		t.Fatal(got, want)
+	}
+}
