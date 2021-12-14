@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"testing"
 
@@ -64,4 +65,36 @@ func TestDec1_2(t *testing.T) {
 func TestMain(m *testing.M) {
 	flag.Parse()
 	os.Exit(m.Run())
+}
+
+func TestDec1KB(t *testing.T) {
+	// example := []int{
+	// 	199,
+	// 	200,
+	// 	208,
+	// 	210,
+	// 	200,
+	// 	207,
+	// 	240,
+	// 	269,
+	// 	260,
+	// 	263,
+	// }
+	test.Run(func() {
+
+		example, err := test.Read(test.Dec2Int)
+		if err != nil {
+			panic(err)
+		}
+
+		count := 0
+		for i := 1; i < len(example); i++ {
+			if example[i] > example[i-1] {
+				count++
+			}
+		}
+
+		fmt.Print(count)
+
+	})
 }

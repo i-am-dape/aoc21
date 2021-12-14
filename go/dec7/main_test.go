@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"math"
 	"os"
 	"strconv"
@@ -106,40 +105,54 @@ func TestDec7HardcodedExample(t *testing.T) {
 }
 
 func TestDec7(t *testing.T) {
+	optimize(t, 0, 0, func(dist int) int { return dist })
+}
+
+func dist2fuel(dist int) int {
+	total := 0
+
+	for i := 1; i <= dist; i++ {
+		total += i
+	}
+
+	return total
+}
+
+func TestDec7_dist2fuel(t *testing.T) {
+	tests := []struct {
+		n    int
+		cost int
+	}{
+		{1, 1},
+		{2, 3},
+		{3, 6},
+		{11, 66},
+		{4, 10},
+	}
+
+	for _, tc := range tests {
+		t.Log(tc)
+
+		cost := dist2fuel(tc.n)
+		if cost != tc.cost {
+			t.Error(">", tc.n, cost, tc.cost)
+		}
+	}
+}
+
+func TestDec7_2(t *testing.T) {
+	optimize(t, 168, 93397632, dist2fuel)
+}
+
+func optimize(t *testing.T, example, input int, fuelFunc func(int) int) {
 	test.Run(func() {
 		crabs := ReadCrabs(t)
-		t.Log(crabs)
+		//t.Log(crabs)
 		min, max, bc := bucket(crabs)
-		t.Log(min, max, len(bc))
-		//t.Log(bc)
-		cc := cross(bc)
-		t.Log(len(cc))
-		//t.Log(cc)
-
-		ex := []int{16, 1, 2, 0, 4, 2, 7, 1, 2, 14}
-		exu := map[int]interface{}{}
-		for _, x := range ex {
-			exu[x] = nil
-		}
-
-		total := 0
-		for src, _ := range exu {
-			total += cc[Crab(src)][2]
-		}
-
-		t.Log("tot:", total)
-
-		t.Log(cc[16][2])
-		t.Log(cc[1][2])
-		t.Log(cc[2][2])
-		t.Log(cc[0][2])
-		t.Log(cc[4][2])
-		t.Log(cc[7][2])
-
+		//t.Log(min, max, len(bc))
 		distances := map[int]int{}
 
 		for i := min; i < max; i++ {
-			fmt.Println(i)
 			totalDistance := 0
 			for pos, cnt := range bc {
 				delta := int(pos) - i
@@ -147,8 +160,7 @@ func TestDec7(t *testing.T) {
 					delta *= -1
 				}
 
-				total := delta * cnt
-				fmt.Println(i, ")", pos, delta, cnt, total)
+				total := fuelFunc(delta) * cnt
 
 				totalDistance += total
 			}
@@ -156,23 +168,14 @@ func TestDec7(t *testing.T) {
 			distances[i] = totalDistance
 		}
 
-		fmt.Println(distances)
-
-		minPos := -1
 		minDist := math.MaxInt
-		for pos, dist := range distances {
+		for _, dist := range distances {
 			if dist < minDist {
 				minDist = dist
-				minPos = pos
 			}
 		}
 
-		fmt.Println(minPos, minDist)
-	})
-}
-
-func TestDec7_2(t *testing.T) {
-	test.Run(func() {
+		test.Check(t, minDist, example, input)
 	})
 }
 
